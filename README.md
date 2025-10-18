@@ -1,61 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Cinema Palace - Movie Recommendation System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project is a **two-part AI-powered movie recommendation system**.
+The **Laravel** part serves as the **frontend and user management system**, while the **Python FastAPI** service (available [here](https://github.com/rayan2162/Ai_Movie_Recommendation_API.git)) handles the **recommendation logic** using the **MovieLens dataset** and **TF-IDF cosine similarity**.
 
-## About Laravel
+## How It Works
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Users search for movies using the OMDB API from the Laravel interface.
+2. They can "like" movies, which are stored in a local database (by session).
+3. When users click **“View Recommendations”**, Laravel sends the liked movie titles as a JSON payload to the Python API (`/recommend` endpoint).
+4. The Python API responds with a list of recommended movies.
+5. Laravel displays these results in a clean, TailwindCSS-styled interface.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This design separates the **frontend/user flow (Laravel)** from the **machine learning logic (Python)** for modularity, scalability, and maintainability.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Search movies via OMDB API
+- Like and save movies (session-based)
+- AI-powered movie recommendations via FastAPI
+- Responsive TailwindCSS UI
+- Laravel 12 + PHP 8.2
+- Python FastAPI backend integration
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Functionality Overview
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Component           | Function                                                                  |
+| ------------------- | ------------------------------------------------------------------------- |
+| **Search Page**     | Fetch movies by title from OMDB API                                       |
+| **Like System**     | Save liked movies in database (as JSON)                                   |
+| **Recommendations** | Send liked titles to FastAPI, get recommendations                         |
+| **Python API**      | Processes the data, finds similar movies using TF-IDF & cosine similarity |
+| **UI Layer**        | Displays recommended movies neatly with poster and details                |
 
-## Laravel Sponsors
+## 1. Clone & Setup
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/yourusername/laravel_movie_recommender.git
+cd laravel_movie_recommender
+composer install
+cp .env.example .env
+php artisan key:generate
+```
 
-### Premium Partners
+## 2. Database Setup
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Make sure your `.env` file has proper database credentials:
 
-## Contributing
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=movie_db
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Then migrate:
 
-## Code of Conduct
+```bash
+php artisan migrate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 3. OMDB API Setup
 
-## Security Vulnerabilities
+Get your free OMDB API key from [https://www.omdbapi.com/apikey.aspx](https://www.omdbapi.com/apikey.aspx)
+and add it to `.env`:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+OMDB_API_KEY=your_omdb_api_key_here
+```
 
-## License
+## 4. Run Python API
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Clone the backend API and start the FastAPI server:
+
+```bash
+git clone https://github.com/rayan2162/Ai_Movie_Recommendation_API.git
+cd Ai_Movie_Recommendation_API
+pip install -r requirements.txt
+python recomender_api.py
+```
+
+This will start the server on:
+
+```
+http://127.0.0.1:3000
+```
+
+## 5. Run Laravel Server
+
+In your Laravel project folder:
+
+```bash
+php artisan serve
+```
+
+Visit:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## Example Workflow
+
+1. Open `http://127.0.0.1:8000`
+2. Search for any movie (e.g., “Batman”)
+3. Like one or more movies
+4. Click **“View Recommendations”**
+5. Laravel sends your liked movie list to FastAPI
+6. Recommended movies are displayed instantly 🎥
+
+---
+
+## Technologies Used
+
+* **Laravel 12**
+* **PHP 8.2**
+* **TailwindCSS**
+* **MySQL**
+* **OMDB API**
+* **FastAPI (Python)**
+* **Pandas, scikit-learn (for ML)**
+
+---
+
+## Related Repository
+
+Ai_Movie_Recommendation_API: [rayan2162/Ai_Movie_Recommendation_API](https://github.com/rayan2162/Ai_Movie_Recommendation_API.git)
