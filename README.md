@@ -36,7 +36,7 @@ This design separates the **frontend/user flow (Laravel)** from the **machine le
 ## 1. Clone & Setup
 
 ```bash
-git clone https://github.com/yourusername/laravel_movie_recommender.git
+git clone https://github.com/rayan2162/Cinema_Palace_Movie_Recommendation_System.git
 cd laravel_movie_recommender
 composer install
 cp .env.example .env
